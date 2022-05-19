@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/customer.css">
+    <link rel="stylesheet" href="../../font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" type="image/png" sizes="16x16" href="/favicon/favicon.png">
+    <title>VAKI - Website mua đồ ăn trực tuyến</title>
+</head>
+<body>
+    <nav class = "navbar-container justify-content-between display-row">
+        <div class="navbar-logo">
+            <span>
+                <a tH:href="@{/customer}">
+                    <img src="../../images/logo.png" alt="">
+                </a>
+            </span>
+        </div>
+        <div>
+            <a class="nav-item" th:href="@{/customer/products}">Đồ ăn</a>
+            <a class="nav-item" th:href="@{/customer/productBestSeller}">Bán chạy</a>
+            <a class="nav-item" th:href="@{/customer/productsPriceLowToHigh}">Giá tăng dần</a>
+            <a class="nav-item" th:href="@{/customer/productsPriceHighToLow}">Giá giảm dần</a>
+            <a class="nav-item" th:href="@{/customer/orderDetails}">Đơn hàng</a>
+        </div>
+        <div>
+            <form th:action="@{/customer/products}" method="post" class="form-inline my-2 my-lg-0">
+                <input name="search" class="form-control mr-sm-2" type="search" placeholder="Tìm kiếm món ăn" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Tìm kiếm</button>           
+            </form>
+        </div>
+        <div>
+            <a class="btn btn-light active ihover" th:href="@{/customer/shoppingCart/list}">Giỏ hàng  <i class="fa fa-cart-plus" aria-hidden="true"></i></a>
+            <!-- <a class="btn btn-light active" href="#">Nguyễn Kiên <i class="fa fa-user-circle-o" style='font-size:16px'></i></a>
+            <a class="btn btn-light active" href="#">Đăng xuất</a> -->
+
+            <div class="btn-group ihover" role="group">
+                <!-- <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Dropdown
+                </button> -->
+                <a id="btnGroupDrop1" class="btn btn-light active dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#"> <span style="font-size: 15px" th:text="${customer.name}"></span> <i class="fa fa-user-circle-o"></i></a>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                  <a style='font-size:14px' class="dropdown-item" href="#" data-toggle="modal" data-target="#exampleModal">Đăng xuất</a>
+                  <a style='font-size:14px' class="dropdown-item" th:href="@{/customer/profile}">Thông tin</a>
+                </div>
+              </div>
+        </div>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Đăng xuất</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <h4 class="modal-body">
+                  Bạn có muốn đăng xuất không?
+                </h4>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Không</button>
+                 
+                  <a th:if="${#request.userPrincipal != null}" th:href="@{/logout}" class="btn btn-primary">Có</a>
+                </div>
+              </div>
+            </div>
+        </div>
+    </nav>
+
+    <div></div>
+    <div></div>
+    <hr>
+
+    <div class="row justify-content-center">
+        <div style="margin-right: 100px;">
+            <img style="width: 450px;" th:src="@{/images/{image}(image = ${restaurant.image})}" alt="">
+        </div>
+        <div style="align-self: center;">
+            <h1 th:text="${restaurant.name}"></h1>
+            <h4 th:text="${restaurant.address}"></h4>
+            <img src="https://shopeefood.vn/app/assets/img/partner-vi.png?dec00ea8fc6f5429f18e83d16c3685f8" alt="">
+        </div>
+    </div>
+
+    <br> <br>
+    <div class="row justify-content-center">
+    	<h3 style="align-items: center;color: brown;">Thực đơn</h3>
+    </div>
+    <!-- <form th:action="@{/}" method="post" > -->
+    <div class="row" style="width: 100%;" th:each="category : ${restaurant.categories}">
+        <div style="width: 30%;"></div>
+        <div style="width: 40%;">
+            <br>
+
+            <h3 th:text="${category.name}"></h3>
+
+            <div class="row justify-content-between" th:each="product : ${category.products}">
+                <div class="row ">
+                    <div>
+                        <img style="width: 60px; margin-left: 30px;"  th:src="@{/images/{image}(image = ${product.image})}" alt="">
+                    </div>  
+                    <div style="margin-left: 20px;">
+                        <h4 th:text="${product.name}"></h4>
+                        <div th:text="'Mô tả: ' + ${product.description}"></div>
+                        <div th:text="'Lượt bán: ' + ${product.orderQuantity}"></div>
+                    </div>                    
+                </div>
+                <div class="row">
+                    <h4 style="margin-right: 40px; margin-top: 10px" th:text="${product.price}"></h4>
+                    <a th:href="@{/customer/shoppingCart/add/{id}(id = ${product.productId})}" class="btn btn-light"><i class="fa fa-plus" aria-hidden="true"></i></i></a>
+                </div>
+            </div>
+         </div>
+         <div style="width: 30%;"></div>
+    </div>
+    <!-- </form> -->
+    
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

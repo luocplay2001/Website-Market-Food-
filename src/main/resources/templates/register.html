@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="../font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" type="image/png" sizes="16x16" href="/favicon/favicon.png">
+    <title>VAKI - Website mua đồ ăn trực tuyến</title>
+</head>
+<body>
+    <nav class = "navbar-container justify-content-between display-row">
+        <div class="navbar-logo">
+            <span>
+                <a th:href="@{/}">
+                    <img src="../images/logo.png" alt="">
+                </a>
+            </span>
+        </div>
+        <div>
+            <a class="nav-item" th:href="@{/products}">Đồ ăn</a>
+            <a class="nav-item" th:href="@{/productBestSeller}">Bán chạy</a>
+            <a class="nav-item" th:href="@{/productsPriceLowToHigh}">Giá tăng dần</a>
+            <a class="nav-item" th:href="@{/productsPriceHighToLow}">Giá giảm dần</a>
+        </div>
+        <div>
+            <form th:action="@{/products}" method="post" class="form-inline my-2 my-lg-0">
+                <input name="search" class="form-control mr-sm-2" type="search" placeholder="Tìm kiếm món ăn" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Tìm kiếm</button>           
+            </form>
+        </div>
+        <div>
+            <a class="btn btn-light active" th:href="@{/register}">Đăng ký</a>
+            <a class="btn btn-light active" th:href="@{/login}">Đăng nhập</a>
+        </div>
+    </nav>
+
+    <div></div>
+    <div></div>
+    <hr>
+
+    <br><br>
+
+    <div class="row" style="width: 100%;">
+        <div style="width: 30%;"></div>
+        <div class="row" style="width: 40%; background-color: rgb(241, 236, 230); justify-content: center;">
+            <div>
+                <h2 style="margin-left: 140px;">Đăng ký</h2> <br>     
+                <form name="f" th:action="@{/register}" method ="post" enctype="multipart/form-data">
+                	<input style="width: 180px;height: 35px; margin-left: 100px;font-size:16px" type="text" id="" name="name" placeholder="Nhập Tên"> <br> <br>
+                	<i class="fa fa-user-circle-o" style='margin-left: 80px;font-size:18px'></i>
+                	<input style="width: 180px;height: 35px;font-size:16px" type="text" id="" name="username" placeholder="Tài khoản"> <br> <br>
+	                <i class="fa fa-key" style='margin-left: 80px;font-size:18px'></i> 
+	                <input style="width: 180px;height: 35px;font-size:16px" type="password" id="" name="password" placeholder="Mật khẩu"> <br> <br>
+	                <i class="fa fa-key" style='margin-left: 80px;font-size:18px'></i> 
+	                <input style="width: 180px;height: 35px;font-size:16px" type="password" id="" name="passwordEnter" placeholder="Nhập lại mật khẩu"> <br> <br>
+	                <h4 style="margin-left: 80px;">Giới tính: 
+		                <input name="gender" value="nam" style="width: 25px;height: 20px;" type="radio" checked/> Nam 
+		                <input name="gender" value="nu"  style="width: 25px;height: 20px;" type="radio" /> Nữ
+	                </h4>
+	                <h4 style="margin-left: 70px;"> 
+	                	Chọn ảnh <i class="fa fa-picture-o" aria-hidden="true"></i>: 
+	                	<input type="file" name="imageFile" />
+	                </h4>
+	                <h4 th:if="${ms != ''}" th:text="${ms}" style="margin-left: 70px;color:red"></h4>
+	                <h4 th:if="${ms == ''}"  style="margin-left: 90px;color:red">Đăng ký thành công</h4>
+	                <br />
+	                <div style="margin-left: 80px">
+	                <span style="font-size: 20px">Bạn là ai?</span>
+	                <select style="width: 120px;height: 25px;font-size: 18px" name="person" id="">
+	                	<option style="font-size: 18px" value="customer">Khách hàng</option>
+	                	<option style="font-size: 18px" value="restaurant">Nhà hàng</option>
+	                	<option style="font-size: 18px" value="shipper">Shipper</option>
+	                </select>
+	                </div> <br /> <br />
+	                <button style="margin-left: 150px;" class="btn btn-success">Đăng ký</button> <br>
+                </form>
+                <h4 style="margin-left: 30px;">Bạn đã có tài khoản? <a th:href="@{/login}">Đăng nhập</a></h4>
+            </div>
+        </div>
+        <div style="width: 30%;"></div>
+    </div>
+
+
+
+
+    
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

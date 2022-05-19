@@ -1,0 +1,22 @@
+*body{
+    font-family: Noto Sans,Arial,sans-serif;
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #464646;
+    text-align: left;
+    margin: 0;
+    box-sizing: border-box
+}
+
+.nav-link {
+    font-size: 18px;
+    margin: 5px;
+}
+.margin-left {
+    margin-left: 350px;
+}
+
+.margin-right {
+    margin-right: 200px;
+}

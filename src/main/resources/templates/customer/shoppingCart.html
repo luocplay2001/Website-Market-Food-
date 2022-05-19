@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/customer.css">
+    <link rel="stylesheet" href="../../font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" type="image/png" sizes="16x16" href="/favicon/favicon.png">
+    <title>VAKI - Website mua đồ ăn trực tuyến</title>
+</head>
+<body>
+    <nav class = "navbar-container justify-content-between display-row">
+        <div class="navbar-logo">
+            <span>
+                <a th:href="@{/customer}">
+                    <img src="../../images/logo.png" alt="">
+                </a>
+            </span>
+        </div>
+        <div>
+            <a class="nav-item" th:href="@{/customer/products}">Đồ ăn</a>
+            <a class="nav-item" th:href="@{/customer/productBestSeller}">Bán chạy</a>
+            <a class="nav-item" th:href="@{/customer/productsPriceLowToHigh}">Giá tăng dần</a>
+            <a class="nav-item" th:href="@{/customer/productsPriceHighToLow}">Giá giảm dần</a>
+            <a class="nav-item" th:href="@{/customer/orderDetails}">Đơn hàng</a>
+        </div>
+        <div>
+            <form th:action="@{/customer/products}" method="post" class="form-inline my-2 my-lg-0">
+                <input name="search" class="form-control mr-sm-2" type="search" placeholder="Tìm kiếm món ăn" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Tìm kiếm</button>           
+            </form>
+        </div>
+        <div>
+            <a class="btn btn-light active ihover" th:href="@{/customer/shoppingCart/list}">Giỏ hàng  <i class="fa fa-cart-plus" aria-hidden="true"></i></a>
+            <!-- <a class="btn btn-light active" href="#">Nguyễn Kiên <i class="fa fa-user-circle-o" style='font-size:16px'></i></a>
+            <a class="btn btn-light active" href="#">Đăng xuất</a> -->
+
+            <div class="btn-group ihover" role="group">
+                <!-- <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Dropdown
+                </button> -->
+                <a id="btnGroupDrop1" class="btn btn-light active dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#"> <span style="font-size: 15px" th:text="${customer.name}"></span> <i class="fa fa-user-circle-o"></i></a>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                  <a style='font-size:14px' class="dropdown-item" href="#" data-toggle="modal" data-target="#exampleModal">Đăng xuất</a>
+                  <a style='font-size:14px' class="dropdown-item" th:href="@{/customer/profile}">Thông tin</a>
+                </div>
+              </div>
+        </div>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Đăng xuất</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <h4 class="modal-body">
+                  Bạn có muốn đăng xuất không?
+                </h4>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Không</button>
+                 
+                  <a th:if="${#request.userPrincipal != null}" th:href="@{/logout}" class="btn btn-primary">Có</a>
+                </div>
+              </div>
+            </div>
+        </div>
+    </nav>
+
+    <div></div>
+    <div></div>
+    <hr>
+
+    
+    <div>
+        <div class="row justify-content-center">
+            <div style="align-self: center;">
+                <h2><i class="fa fa-location-arrow"></i> Địa chỉ giao hàng</h2>
+                <h3><span style="font-size: 20px" th:text="${customer.name}"></span> - <span style="font-size: 20px" th:text="${customer.phone}"></span></h3>
+                <h4 th:text="${customer.address}"></h4>
+                <h4>Thời gian hiện tại: <span style="font-size: 20px" th:text="${date}"></span></h4>
+                <hr>
+                <h4 th:if="${restaurant != null}" th:text="${restaurant.address}"></h4>
+                <div th:if="${!cartItems.isEmpty()}" th:each="cartItem : ${cartItems}">
+                <div class="row justify-content-between">
+                    <div>
+                        <img style="width: 60px; margin-left: 20px;" th:src="@{/images/{image}(image = ${cartItem.image})}" alt="">
+                    </div>  
+                    <div>
+                        <h4 th:if="${cartItem.name != null}"  th:text="${cartItem.name}"></h4>
+                        <div th:if="${cartItem.description != null}" th:text="${cartItem.description}"></div>
+                    </div>
+                    <div>
+                    	<span style="font-size: 20px">x</span>
+                    	<span th:if="${cartItem.quantity != null}" th:text="${cartItem.quantity}" style="font-size: 30px"></span>
+                        <a th:href="@{/customer/remove/{id}(id = ${cartItem.productId})}" style="margin-bottom: 20px;color: #fff" class="btn btn-danger"><i class="fa fa-minus"></i></a> 
+                        <a th:href="@{/customer/shoppingCart/add/{id}(id = ${cartItem.productId})}" style="margin-bottom: 20px;color: #fff" class="btn btn-primary"><i class="fa fa-plus"></i></a> 
+                    </div>                    
+                </div>
+                <hr>
+      			</div>
+      			<div th:if="${cartItems.isEmpty()}">
+      				<h3 style="color: red">Giỏ hàng đang trống, quay lại trang Home để đặt hàng!</h3>
+      				<br /> <br /> <br /> <br />
+      		
+      			</div>
+                <div class="row justify-content-between">
+                    <div>
+                        <h4 th:if="${count != null && !cartItems.isEmpty()}" style="margin-left: 20px;" th:text="'Tổng ' + ${count} + ' phần'"></h4>
+                    </div>
+                    <div>
+                        <h4 th:if="${total != null && !cartItems.isEmpty()}" th:text="${total}"></h4>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div>
+                		<a th:if="	${restaurant != null}" th:href="@{/customer/view-restaurant/{id}(id = ${restaurant.restaurantId})}" style="color: #fff" class="btn btn-danger">Back Restaurant</a>
+                    </div>
+                    <div>
+                		<a th:if="	${restaurant == null}" th:href="@{/customer}" style="color: #fff" class="btn btn-danger"><i style="color: #fff" class="fa fa-arrow-left"></i> Trở về trang Home</a>
+                    </div>
+                    <div>
+                		<a th:if="${total != null && !cartItems.isEmpty()}" th:href="@{/customer/orderDetails}" th:text="'Đặt đơn - ' + ${total}" style="color: #fff" class="btn btn-primary"></a>
+                    </div>
+                </div>
+            </div>
+        <div>
+    </div>
+    
+    
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
