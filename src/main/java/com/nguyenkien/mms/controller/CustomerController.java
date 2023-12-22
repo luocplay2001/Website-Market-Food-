@@ -82,7 +82,6 @@ public class CustomerController {
 				}
 			}
 			Customer customer = customerService.getCustomerById(id);
-//			System.out.println(customer.getName());
 			model.addAttribute("customer", customer);
 		}
 	}
@@ -188,15 +187,11 @@ public class CustomerController {
 	
 	@PostMapping("uploadProfile/{customerId}")
 	public String upload(@ModelAttribute Customer customer) {
-//		String gender = request.getParameter("gender");
-//		System.out.println(gender);
-		System.out.println(customer);
 		Customer c = customerService.getCustomerById(customer.getCustomerId());
 		c.setAddress(customer.getAddress());
 		c.setPhone(customer.getPhone());
 		c.setName(customer.getName());
 		customerService.saveCustomer(c);
-		System.out.println(customerService.getCustomerById(customer.getCustomerId()));
 		return "redirect:/customer/profile";
 	}
 	
@@ -249,7 +244,6 @@ public class CustomerController {
 				shoppingCartService.clear();
 			}
 		}
-		System.out.println(cartItems);
 		if(product != null) {
 			CartItem item = new CartItem();
 			item.setProductId(product.getProductId());
@@ -267,31 +261,18 @@ public class CustomerController {
 	@GetMapping("shoppingCart/list")
 	public String list(Model model, Principal principal) {
 		Collection<CartItem> cartItems = shoppingCartService.getCartItem();
-//		if(cartItems.isEmpty()) {
-//			return "403Page";
-//		}
 		userCustomer(model, principal);
-//		if(cartItems.isEmpty()) {
-//			System.out.println("aaaaaaaaaaaa");
-//			return "customer/homeCustomer";
-//		}
 		model.addAttribute("cartItems",cartItems);
 		model.addAttribute("total",shoppingCartService.getAmount());
 		model.addAttribute("count", shoppingCartService.getCount());
-		System.out.println("Thuc an cut");
-//		Iterator<CartItem> itr = cartItems.iterator();
 		if(!cartItems.isEmpty()) {
 			Iterator<CartItem> itr = cartItems.iterator();
 			Product product = productService.getProductById(itr.next().getProductId());
 			Restaurant restaurant = product.getRestaurant();
 			model.addAttribute("restaurant", restaurant);
 		}
-		System.out.println("CartItems: " + cartItems);
-//		Product product = productService.getProductById(itr.next().getProductId());
-//		Restaurant restaurant = product.getRestaurant();
-//		model.addAttribute("restaurant", restaurant);
 		Date date = new Date(System.currentTimeMillis());
-		SimpleDateFormat formatter = new SimpleDateFormat("hh:mm dd/MM/yyyy");
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm dd/MM/yyyy");
 		String strDate = formatter.format(date);
 		model.addAttribute("date", strDate);
 		return "customer/shoppingCart";
@@ -325,7 +306,7 @@ public class CustomerController {
 		Order order = new Order();
 		order.setPrice(shoppingCartService.getAmount());
 		Date date = new Date(System.currentTimeMillis());
-		SimpleDateFormat formatter = new SimpleDateFormat("hh:mm dd/MM/yyyy");
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm dd/MM/yyyy");
 		String strDate = formatter.format(date);
 		order.setOrderDate(strDate);
 		order.setQuantity(shoppingCartService.getCount()); 
@@ -350,7 +331,6 @@ public class CustomerController {
 			}
 			order.setStatus_customer(0);
 			orderService.saveOrder(order);
-			System.out.println("Order: " + order);
 			List<Order> orderss = orderService.getAllOrders();
 			for(CartItem cartItem : cartItems) {
 				OrderProduct orderProduct = new OrderProduct();
@@ -362,7 +342,6 @@ public class CustomerController {
 				orderProductService.saveOrderProduct(orderProduct);
 			}
 			List<OrderProduct> orderProducts = orderProductService.getAllOrderProducts();
-			System.out.println(orderProducts);
 		}
 		shoppingCartService.clear();
 		List<OrderProduct> orderProducts = orderProductService.getAllOrderProducts();

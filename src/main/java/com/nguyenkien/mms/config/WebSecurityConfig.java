@@ -31,7 +31,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// Sét đặt dịch vụ để tìm kiếm User trong Database.
 		// Và sét đặt PasswordEncoder.
-		System.out.println("hello 50 ae");   
 		auth.userDetailsService(customerDetailsService).passwordEncoder(appConfig.passwordEncoder());
 	}
 
@@ -59,7 +58,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// Ngoại lệ AccessDeniedException sẽ ném ra.
 		http.authorizeRequests().and().exceptionHandling().accessDeniedPage("/403");
 		
-		System.out.println("hello 500 ae"); 
 		// Cấu hình cho Login Form.
 		http.authorizeRequests().and().formLogin()//
 				// Submit URL của trang login
@@ -79,17 +77,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	}
 
-//	@Bean
-//	public PersistentTokenRepository persistentTokenRepository() {
-//		JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
-//		db.setDataSource(dataSource);
-//		return db;
-//	}
-	
-//	@Bean
-//	public PersistentTokenRepository persistentTokenRepository() {
-//	    InMemoryTokenRepositoryImpl memory = new InMemoryTokenRepositoryImpl();
-//	    return memory;
-//	}
 
 }

@@ -90,8 +90,7 @@ public class HomeController {
 		if(principal != null) {
 			String email = principal.getName();
 			 
-			System.out.println("Email: " + email);
-			 
+
 			User loginedCustomer = (User) ((Authentication) principal).getPrincipal();		 
 			String customer = WebUtils.toString(loginedCustomer);
 			
@@ -130,7 +129,6 @@ public class HomeController {
 	public String adminPage(Model model, Principal principal) {
 		
 		User loginedCustomer = (User) ((Authentication) principal).getPrincipal();
-		System.out.println("aaa: " + loginedCustomer);
 		String customer = WebUtils.toString(loginedCustomer);
 		model.addAttribute("customer", customer);
 		
@@ -213,7 +211,7 @@ public class HomeController {
 						customer.setEmail(username);
 						customer.setPassword(passwordEncoder.encode(password));
 						Date date = new Date(System.currentTimeMillis());
-						SimpleDateFormat formatter = new SimpleDateFormat("hh:mm dd/MM/yyyy");
+						SimpleDateFormat formatter = new SimpleDateFormat("HH:mm dd/MM/yyyy");
 						String strDate = formatter.format(date);
 						customer.setRegisterDate(strDate);
 						customer.setDiscount(discountService.getDiscountById(1l));
@@ -251,7 +249,7 @@ public class HomeController {
 						restaurant.setEmail(username);
 						restaurant.setPassword(passwordEncoder.encode(password));
 						Date date = new Date(System.currentTimeMillis());
-						SimpleDateFormat formatter = new SimpleDateFormat("hh:mm dd/MM/yyyy");
+						SimpleDateFormat formatter = new SimpleDateFormat("HH:mm dd/MM/yyyy");
 						String strDate = formatter.format(date);
 						restaurant.setRegisterDate(strDate);
 						if(gender.equals("nu")) {
@@ -288,7 +286,7 @@ public class HomeController {
 						shipper.setEmail(username);
 						shipper.setPassword(passwordEncoder.encode(password));
 						Date date = new Date(System.currentTimeMillis());
-						SimpleDateFormat formatter = new SimpleDateFormat("hh:mm dd/MM/yyyy");
+						SimpleDateFormat formatter = new SimpleDateFormat("HH:mm dd/MM/yyyy");
 						String strDate = formatter.format(date);
 						shipper.setRegisterDate(strDate);
 						if(gender.equals("nu")) {
@@ -311,7 +309,6 @@ public class HomeController {
 				}
 			}
 			model.addAttribute("ms", ms);
-			System.out.println(username + " - " + password + " - " + person);
 		} catch (Exception e) {
 			
 		}

@@ -238,7 +238,6 @@ public class AdminController {
 	@PostMapping("updateRestaurant/{restaurantId}") 
 	public String updateNewRestaurant(@PathVariable("restaurantId") Long restaurantId) {
 		try {
-			System.out.println(0);
 			String name = request.getParameter("name");
 			String username = request.getParameter("username");
 			String password = request.getParameter("password");
@@ -258,12 +257,10 @@ public class AdminController {
 			} else {
 				restaurant.setGender(1);
 			}
-			System.out.println("Restaurant: " + restaurant);
 			restaurantService.saveRestaurant(restaurant);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		System.out.println(1);
 		return "redirect:/admin/listRestaurant";
 	}
 	
@@ -301,7 +298,7 @@ public class AdminController {
 					customer.setAddress(address);
 					customer.setPhone(phone);
 					Date date = new Date(System.currentTimeMillis());
-					SimpleDateFormat formatter = new SimpleDateFormat("hh:mm dd/MM/yyyy");
+					SimpleDateFormat formatter = new SimpleDateFormat("HH:mm dd/MM/yyyy");
 					String strDate = formatter.format(date);
 					customer.setRegisterDate(strDate);
 					customer.setDiscount(discountService.getDiscountById(1l));
@@ -343,7 +340,7 @@ public class AdminController {
 					restaurant.setAddress(address);
 					restaurant.setPhone(phone);
 					Date date = new Date(System.currentTimeMillis());
-					SimpleDateFormat formatter = new SimpleDateFormat("hh:mm dd/MM/yyyy");
+					SimpleDateFormat formatter = new SimpleDateFormat("HH:mm dd/MM/yyyy");
 					String strDate = formatter.format(date);
 					restaurant.setRegisterDate(strDate);
 					if(gender.equals("nu")) {
@@ -385,7 +382,7 @@ public class AdminController {
 					shipper.setAddress(address);
 					shipper.setPhone(phone);
 					Date date = new Date(System.currentTimeMillis());
-					SimpleDateFormat formatter = new SimpleDateFormat("hh:mm dd/MM/yyyy");
+					SimpleDateFormat formatter = new SimpleDateFormat("HH:mm dd/MM/yyyy");
 					String strDate = formatter.format(date);
 					shipper.setRegisterDate(strDate);
 					if(gender.equals("nu")) {

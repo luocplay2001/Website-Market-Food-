@@ -4,10 +4,13 @@ import java.security.Principal;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -105,15 +108,11 @@ public class ShipperController {
 	
 	@PostMapping("uploadProfile/{shipperId}")
 	public String upload(@ModelAttribute Shipper shipper) {
-//		String gender = request.getParameter("gender");
-//		System.out.println(gender);
-		System.out.println(shipper);
 		Shipper s = shipperService.getShipperById(shipper.getShipperId());
 		s.setAddress(shipper.getAddress());
 		s.setPhone(shipper.getPhone());
 		s.setName(shipper.getName());
 		shipperService.saveShipper(s);
-		System.out.println(shipperService.getShipperById(shipper.getShipperId()));
 		return "redirect:/shipper/profile";
 	}
 	
@@ -204,14 +203,9 @@ public class ShipperController {
 			shipper = shipperService.getShipperById(id);
 			model.addAttribute("shipper", shipper);
 		}
-		
-//		Order order = orderService.getOrderById(orderId);
-//		order.setShipper(shipper);
-//		orderService.saveOrder(order);
 		List<OrderProduct> orderProducts = orderProductService.getAllOrderProducts();
 		model.addAttribute("orderProducts", orderProducts);
 		List<Order> orders = new ArrayList<Order>();
-//		System.out.println(orderService.getAllOrders());
 		for(Order o : orderService.getAllOrders()) {
 			if(o.getShipper() != null 
 					&& (o.getShipper().getShipperId() 
@@ -220,8 +214,7 @@ public class ShipperController {
 				orders.add(o);
 			}
 		}
-		System.out.println(orders);
-		model.addAttribute("orders", orders); 
+		model.addAttribute("orders", orders);
 		return "shipper/orderDid";
 	}
 	
@@ -269,7 +262,6 @@ public class ShipperController {
 		List<OrderProduct> orderProducts = orderProductService.getAllOrderProducts();
 		model.addAttribute("orderProducts", orderProducts);
 		List<Order> orders = new ArrayList<Order>();
-//		System.out.println(orderService.getAllOrders());
 		for(Order o : orderService.getAllOrders()) {
 			if(o.getShipper() != null 
 					&& (o.getShipper().getShipperId() 
@@ -278,8 +270,7 @@ public class ShipperController {
 				orders.add(o);
 			}
 		}
-		System.out.println(orders);
-		model.addAttribute("orders", orders); 
+		model.addAttribute("orders", orders);
 		return "shipper/delivere";
 	}
 	
@@ -291,7 +282,7 @@ public class ShipperController {
 		order.setStatus_shipper(1);
 		order.setStatus_customer(1);
 		Date date = new Date(System.currentTimeMillis());
-		SimpleDateFormat formatter = new SimpleDateFormat("hh:mm dd/MM/yyyy");
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm dd/MM/yyyy");
 		String strDate = formatter.format(date);
 		order.setOrderDateDelivered(strDate);
 		orderService.saveOrder(order);
@@ -314,14 +305,9 @@ public class ShipperController {
 			shipper = shipperService.getShipperById(id);
 			model.addAttribute("shipper", shipper);
 		}
-		
-//		Order order = orderService.getOrderById(orderId);
-//		order.setShipper(shipper);
-//		orderService.saveOrder(order);
 		List<OrderProduct> orderProducts = orderProductService.getAllOrderProducts();
 		model.addAttribute("orderProducts", orderProducts);
 		List<Order> orders = new ArrayList<Order>();
-//		System.out.println(orderService.getAllOrders());
 		for(Order o : orderService.getAllOrders()) {
 			if(o.getShipper() != null 
 					&& (o.getShipper().getShipperId() 
@@ -330,8 +316,8 @@ public class ShipperController {
 				orders.add(o);
 			}
 		}
-		System.out.println(orders);
-		model.addAttribute("orders", orders); 
+		Collections.sort(orders, (o1,o2) -> o2.getOrderDateDelivered().compareTo(o1.getOrderDateDelivered()));
+		model.addAttribute("orders", orders);
 		return "shipper/orderDelivered";
 	}
 }

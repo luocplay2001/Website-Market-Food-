@@ -5,6 +5,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -131,15 +132,11 @@ public class RestaurantController {
 	
 	@PostMapping("uploadProfile/{restaurantId}")
 	public String upload(@ModelAttribute Restaurant restaurant) {
-//		String gender = request.getParameter("gender");
-//		System.out.println(gender);
-		System.out.println(restaurant);
 		Restaurant r = restaurantService.getRestaurantById(restaurant.getRestaurantId());
 		r.setAddress(restaurant.getAddress());
 		r.setPhone(restaurant.getPhone());
 		r.setName(restaurant.getName());
 		restaurantService.saveRestaurant(r);
-		System.out.println(restaurantService.getRestaurantById(restaurant.getRestaurantId()));
 		return "redirect:/restaurant/profile";
 	}
 	
@@ -270,7 +267,6 @@ public class RestaurantController {
 		p.setDescription(product.getDescription());
 		p.setPrice(product.getPrice());
 		productService.saveProduct(p);
-		System.out.println(product);
 		return "redirect:/restaurant/menu";
 	}
 	
@@ -298,6 +294,7 @@ public class RestaurantController {
 			}
 		}
 		List<OrderProduct> orderProducts = orderProductService.getAllOrderProducts();
+		Collections.sort(orders, (o1, o2) -> o2.getOrderDateDelivered().compareTo(o1.getOrderDateDelivered()));
 		model.addAttribute("orderProducts", orderProducts);
 		model.addAttribute("orders", orders);
 		return "restaurant/orderHistory";

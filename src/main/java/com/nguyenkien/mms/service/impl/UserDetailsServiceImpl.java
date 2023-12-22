@@ -53,13 +53,11 @@ public class UserDetailsServiceImpl implements UserDetailsService{
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
     	
     	
-    	System.out.println("userName: " + userName);
         Customer customer = this.customerRepository.findByEmail(userName);
         Restaurant restaurant = this.restaurantRepository.findByEmail(userName);
         Shipper shipper = this.shipperRepository.findByEmail(userName);
         UserDetails userDetails;
         if (customer == null && restaurant == null && shipper == null) {
-            System.out.println("User not found! " + userName);
             throw new UsernameNotFoundException("User " + userName + " was not found in the database");
         } 
         	
@@ -67,9 +65,6 @@ public class UserDetailsServiceImpl implements UserDetailsService{
         List<RestaurantRole> restaurantRoles = this.restaurantRoleRepository.findByRestaurant(restaurant);
         List<CustomerRole> customerRoles = this.customerRoleRepository.findByCustomer(customer);
         List<ShipperRole> shipperRoles = this.shipperRoleRepository.findByShipper(shipper);
-        System.out.println("List CustomerRole: " + customerRoles);
-        System.out.println("List RestaurantRole: " + restaurantRoles);
-        System.out.println("List ShipperRole: " + shipperRoles);
         Set<GrantedAuthority> grantList = new HashSet<GrantedAuthority>();
         if (customerRoles != null) {
             for (CustomerRole customerRole : customerRoles) {
@@ -94,7 +89,6 @@ public class UserDetailsServiceImpl implements UserDetailsService{
                 grantList.add(authority);
             }
          }
-    	System.out.println("List:" + grantList);
 
         if(shipper != null) {
         	userDetails = (UserDetails) new User(shipper.getEmail(), //
