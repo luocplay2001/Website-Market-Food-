@@ -3,17 +3,17 @@ package com.nguyenkien.mms.controller;
 import java.nio.file.Path;
 import java.security.Principal;
 import java.sql.Date;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 
+import com.nguyenkien.mms.utils.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
@@ -317,13 +317,21 @@ public class HomeController {
 	
 	@GetMapping("products")
 	public String products(Model model,Principal principal) {
-		model.addAttribute("products", productService.getAllProducts());
+		List<Product> products = productService.getAllProducts();
+		for (int i = 0; i < products.size(); i++) {
+			products.get(i).setPriceVND(NumberUtils.getVND(products.get(i).getPrice()));
+		}
+		model.addAttribute("products", products);
 		return "products";
 	}
 	
 	@GetMapping("productBestSeller") 
 	public String productBestSeller(Model model, Principal principal) {
 		List<Product> products = productService.getAllProducts();
+		for (int i = 0; i < products.size(); i++) {
+			products.get(i).setPriceVND(NumberUtils.getVND(products.get(i).getPrice()));
+		}
+//		System.out.println(NumberUtils.getVND(products.get(0).getPrice()));
 		products.sort((p1, p2) -> p2.getOrderQuantity() - p1.getOrderQuantity()); 
 		model.addAttribute("products", products);
 		return "products";
@@ -332,6 +340,9 @@ public class HomeController {
 	@GetMapping("productsPriceLowToHigh") 
 	public String productsPriceLowToHigh(Model model, Principal principal) {
 		List<Product> products = productService.getAllProducts();
+		for (int i = 0; i < products.size(); i++) {
+			products.get(i).setPriceVND(NumberUtils.getVND(products.get(i).getPrice()));
+		}
 		Collections.sort(products,new Comparator<Product>() {
 			 // p1.getPrice() < p2.getPrice()
             public int compare(Product p1, Product p2) {
@@ -347,6 +358,9 @@ public class HomeController {
 	@GetMapping("productsPriceHighToLow") 
 	public String productsPriceHighToLow(Model model, Principal principal) {
 		List<Product> products = productService.getAllProducts();
+		for (int i = 0; i < products.size(); i++) {
+			products.get(i).setPriceVND(NumberUtils.getVND(products.get(i).getPrice()));
+		}
 		Collections.sort(products,new Comparator<Product>() {
 			 // p1.getPrice() < p2.getPrice()
             public int compare(Product p1, Product p2) {
@@ -373,7 +387,14 @@ public class HomeController {
 					}
 				}
 			}
-			model.addAttribute("products", products);
+			Iterator<Product> iterator = products.iterator();
+			List<Product> list = new ArrayList<>();
+			while (iterator.hasNext()) {
+				Product product = iterator.next();
+				product.setPriceVND(NumberUtils.getVND(product.getPrice()));
+				list.add(product);
+			}
+			model.addAttribute("products", list);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

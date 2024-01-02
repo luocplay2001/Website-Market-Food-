@@ -5,16 +5,11 @@ package com.nguyenkien.mms.controller;
 import java.security.Principal;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.nguyenkien.mms.utils.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -98,7 +93,11 @@ public class CustomerController {
 	@GetMapping("products")
 	public String products(Model model,Principal principal) {
 		userCustomer(model, principal);
-		model.addAttribute("products", productService.getAllProducts());
+		List<Product> products = productService.getAllProducts();
+		for (int i = 0; i < products.size(); i++) {
+			products.get(i).setPriceVND(NumberUtils.getVND(products.get(i).getPrice()));
+		}
+		model.addAttribute("products", products);
 		return "customer/productsCustomer";
 	}
 	
@@ -106,15 +105,10 @@ public class CustomerController {
 	public String productBestSeller(Model model, Principal principal) {
 		userCustomer(model, principal);
 		List<Product> products = productService.getAllProducts();
-		products.sort((p1, p2) -> p2.getOrderQuantity() - p1.getOrderQuantity()); 
-//		Collections.sort(products,new Comparator<Product>() {
-//			 // p1.getPrice() < p2.getPrice()
-//            public int compare(Product p1, Product p2) {
-//                if(p1.getPrice() > p2.getPrice())
-//                	return 1;
-//                return -1;
-//            }
-//		});  
+		for (int i = 0; i < products.size(); i++) {
+			products.get(i).setPriceVND(NumberUtils.getVND(products.get(i).getPrice()));
+		}
+		products.sort((p1, p2) -> p2.getOrderQuantity() - p1.getOrderQuantity());
 		model.addAttribute("products", products);
 		return "customer/productsCustomer";
 	}
@@ -123,6 +117,9 @@ public class CustomerController {
 	public String productsPriceLowToHigh(Model model, Principal principal) {
 		userCustomer(model, principal);
 		List<Product> products = productService.getAllProducts();
+		for (int i = 0; i < products.size(); i++) {
+			products.get(i).setPriceVND(NumberUtils.getVND(products.get(i).getPrice()));
+		}
 		Collections.sort(products,new Comparator<Product>() {
 			 // p1.getPrice() < p2.getPrice()
             public int compare(Product p1, Product p2) {
@@ -139,6 +136,9 @@ public class CustomerController {
 	public String productsPriceHighToLow(Model model, Principal principal) {
 		userCustomer(model, principal);
 		List<Product> products = productService.getAllProducts();
+		for (int i = 0; i < products.size(); i++) {
+			products.get(i).setPriceVND(NumberUtils.getVND(products.get(i).getPrice()));
+		}
 		Collections.sort(products,new Comparator<Product>() {
 			 // p1.getPrice() < p2.getPrice()
             public int compare(Product p1, Product p2) {
@@ -166,7 +166,17 @@ public class CustomerController {
 					}
 				}
 			}
-			model.addAttribute("products", products);
+//			for (int i = 0; i < products.size(); i++) {
+//				products.get(i).setPriceVND(NumberUtils.getVND(products.get(i).getPrice()));
+//			}
+			Iterator<Product> iterator = products.iterator();
+			List<Product> list = new ArrayList<>();
+			while (iterator.hasNext()) {
+				Product product = iterator.next();
+				product.setPriceVND(NumberUtils.getVND(product.getPrice()));
+				list.add(product);
+			}
+			model.addAttribute("products", list);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
