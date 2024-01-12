@@ -11,6 +11,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 
+import com.nguyenkien.mms.model.*;
 import com.nguyenkien.mms.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,13 +23,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.nguyenkien.mms.model.Category;
-import com.nguyenkien.mms.model.Customer;
-import com.nguyenkien.mms.model.Order;
-import com.nguyenkien.mms.model.OrderProduct;
-import com.nguyenkien.mms.model.Product;
-import com.nguyenkien.mms.model.Restaurant;
 
 
 @Controller
@@ -304,6 +298,12 @@ public class RestaurantController {
 				orderProductService.deleteOrderProductById(orderProduct.getId());
 			}
 		}
+		Order order = orderService.getOrderById(orderId);
+		EmailRequest emailRequest = new EmailRequest();
+		emailRequest.setTo(order.getRestaurant().getEmail());
+		emailRequest.setSubject("ĐƠN HÀNG ĐÃ BỊ HUỶ");
+		emailRequest.setBody("Đơn hàng có mã đơn hàng " + order.getOrderId() + " đã bị huỷ từ nhà hàng.");
+		System.out.println(emailRequest);
 		orderService.deleteOrderById(orderId);
 		return "redirect:/restaurant";
 	}

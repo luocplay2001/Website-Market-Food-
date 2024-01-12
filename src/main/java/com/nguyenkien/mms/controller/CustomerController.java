@@ -9,6 +9,7 @@ import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.nguyenkien.mms.model.*;
 import com.nguyenkien.mms.service.*;
 import com.nguyenkien.mms.utils.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +21,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.nguyenkien.mms.model.CartItem;
-import com.nguyenkien.mms.model.Customer;
-import com.nguyenkien.mms.model.Order;
-import com.nguyenkien.mms.model.OrderProduct;
-import com.nguyenkien.mms.model.Product;
-import com.nguyenkien.mms.model.Restaurant;
 
 
 @Controller
@@ -293,6 +287,12 @@ public class CustomerController {
 	
 	@GetMapping("orderDelete/{orderId}")
 	public String orderDelete(@PathVariable("orderId") Long orderId) {
+		Order order = orderService.getOrderById(orderId);
+		EmailRequest emailRequest = new EmailRequest();
+		emailRequest.setTo(order.getRestaurant().getEmail());
+		emailRequest.setSubject("ĐƠN HÀNG ĐÃ BỊ HUỶ");
+		emailRequest.setBody("Đơn hàng có mã đơn hàng " + order.getOrderId() + " đã bị huỷ từ người mua, vui lòng không chuẩn bị hàng");
+		System.out.println(emailRequest);
 		List<OrderProduct> orderProducts = orderProductService.getAllOrderProducts();
 		for(OrderProduct orderProduct : orderProducts) {
 			if(orderProduct.getOrder().getOrderId() == orderId) {
@@ -318,7 +318,7 @@ public class CustomerController {
 		order.setOrderDate(strDate);
 		order.setQuantity(shoppingCartService.getCount()); 
 		List<Customer> customers = customerService.getAllCustomers();
-		if(principal != null) { 
+		if(principal != null) {
 			Long id = 0l;
 			String email = principal.getName();
 			for(Customer i : customers) {
@@ -336,6 +336,11 @@ public class CustomerController {
 				Product product = productService.getProductById(cartItem.getProductId());
 				order.setRestaurant(product.getRestaurant());
 			}
+			EmailRequest emailRequest = new EmailRequest();
+			emailRequest.setTo(order.getRestaurant().getEmail());
+			emailRequest.setSubject("ĐƠN HÀNG MỚI");
+			emailRequest.setBody("Quán đã có đơn hàng mới, vui lòng chờ tài xế xác nhận đơn hàng rồi mới làm món.");
+			System.out.println(emailRequest);
 			order.setStatus_customer(0);
 			orderService.saveOrder(order);
 			List<Order> orderss = orderService.getAllOrders();

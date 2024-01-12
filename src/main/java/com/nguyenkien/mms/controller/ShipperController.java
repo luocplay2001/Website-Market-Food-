@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.nguyenkien.mms.model.*;
 import com.nguyenkien.mms.service.*;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +21,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.nguyenkien.mms.model.Customer;
-import com.nguyenkien.mms.model.Order;
-import com.nguyenkien.mms.model.OrderProduct;
-import com.nguyenkien.mms.model.Product;
-import com.nguyenkien.mms.model.Restaurant;
-import com.nguyenkien.mms.model.Shipper;
 
 @Controller
 @RequestMapping("shipper")
@@ -141,6 +135,7 @@ public class ShipperController {
 	@RequestMapping("orderDid/{orderId}")
 	public String orderDid(Model model,Principal principal,
 			@PathVariable("orderId") Long orderId) {
+		System.out.println("0000000000000000");
 		List<Shipper> shippers = shipperService.getAllShippers();
 		Shipper shipper = null;
 		if(principal != null) {
@@ -158,6 +153,12 @@ public class ShipperController {
 		Order order = orderService.getOrderById(orderId);
 		order.setShipper(shipper);
 		orderService.saveOrder(order);
+		EmailRequest emailRequest = new EmailRequest();
+		emailRequest.setTo(order.getRestaurant().getEmail());
+		emailRequest.setSubject("ĐÃ CÓ TÀI XẾ NHẬN HÀNG");
+		emailRequest.setBody("Đơn hàng có mã " + order.getOrderId() + " đã có tài xế tên "
+				+ order.getShipper().getName() + " nhận đơn.");
+		System.out.println(emailRequest); // gui nha hang va khach hang
 		return "redirect:/shipper/orderDid";
 	}
 	
@@ -181,6 +182,12 @@ public class ShipperController {
 		Order order = orderService.getOrderById(orderId);
 		order.setShipper(null);
 		orderService.saveOrder(order);
+		EmailRequest emailRequest = new EmailRequest();
+		emailRequest.setTo(order.getRestaurant().getEmail());
+		emailRequest.setSubject("TÀI XẾ ĐÃ TỪ CHỐI ĐƠN HÀNG");
+		emailRequest.setBody("Tài xế " + shipper.getName() + " đã từ chối đơn hàng có mã đơn "
+				+ order.getOrderId() + ".");
+		System.out.println(emailRequest);
 		return "redirect:/shipper/orderDid";
 	}
 	
@@ -232,7 +239,11 @@ public class ShipperController {
 				productService.saveProduct(product);
 			}
 		}
-		
+		EmailRequest emailRequest = new EmailRequest();
+		emailRequest.setTo(order.getRestaurant().getEmail());
+		emailRequest.setSubject("TÀI XẾ ĐÃ LẤY HÀNG");
+		emailRequest.setBody("Tài xế đã lấy hàng và đang tiến hành giao đến tay khách hàng.");
+		System.out.println(emailRequest);
 		return "redirect:/shipper/delivere";
 	}
 	
@@ -283,6 +294,11 @@ public class ShipperController {
 		String strDate = formatter.format(date);
 		order.setOrderDateDelivered(strDate);
 		orderService.saveOrder(order);
+		EmailRequest emailRequest = new EmailRequest();
+		emailRequest.setTo(order.getRestaurant().getEmail());
+		emailRequest.setSubject("TÀI XẾ ĐÃ GIAO HÀNG THÀNH CÔNG");
+		emailRequest.setBody("Tài xế đã giao hàng thành công tới khách hàng");
+		System.out.println(emailRequest);
 		return "redirect:/shipper/orderDelivered";
 	}
 	
