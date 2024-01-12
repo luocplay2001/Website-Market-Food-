@@ -7,6 +7,7 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 import com.nguyenkien.mms.model.*;
@@ -286,13 +287,14 @@ public class CustomerController {
 	}
 	
 	@GetMapping("orderDelete/{orderId}")
-	public String orderDelete(@PathVariable("orderId") Long orderId) {
+	public String orderDelete(@PathVariable("orderId") Long orderId) throws MessagingException {
 		Order order = orderService.getOrderById(orderId);
 		EmailRequest emailRequest = new EmailRequest();
 		emailRequest.setTo(order.getRestaurant().getEmail());
 		emailRequest.setSubject("ĐƠN HÀNG ĐÃ BỊ HUỶ");
 		emailRequest.setBody("Đơn hàng có mã đơn hàng " + order.getOrderId() + " đã bị huỷ từ người mua, vui lòng không chuẩn bị hàng");
 		System.out.println(emailRequest);
+		emailService.sendEmail(emailRequest);
 		List<OrderProduct> orderProducts = orderProductService.getAllOrderProducts();
 		for(OrderProduct orderProduct : orderProducts) {
 			if(orderProduct.getOrder().getOrderId() == orderId) {
@@ -304,7 +306,7 @@ public class CustomerController {
 	}
 	
 	@RequestMapping("/orderDetails")
-	public String orderDetails(Principal principal, Model model) {  
+	public String orderDetails(Principal principal, Model model) throws MessagingException {
 		Collection<CartItem> cartItems = shoppingCartService.getCartItem();
 		List<Order> orders = orderService.getAllOrders();
 		if(cartItems.isEmpty() && orders.isEmpty()) {
@@ -340,7 +342,7 @@ public class CustomerController {
 			emailRequest.setTo(order.getRestaurant().getEmail());
 			emailRequest.setSubject("ĐƠN HÀNG MỚI");
 			emailRequest.setBody("Quán đã có đơn hàng mới, vui lòng chờ tài xế xác nhận đơn hàng rồi mới làm món.");
-			System.out.println(emailRequest);
+			emailService.sendEmail(emailRequest);
 			order.setStatus_customer(0);
 			orderService.saveOrder(order);
 			List<Order> orderss = orderService.getAllOrders();

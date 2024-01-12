@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 
@@ -291,7 +292,7 @@ public class RestaurantController {
 	}
 	
 	@GetMapping("orderDelete/{orderId}")
-	public String orderDelete(@PathVariable("orderId") Long orderId) {
+	public String orderDelete(@PathVariable("orderId") Long orderId) throws MessagingException {
 		List<OrderProduct> orderProducts = orderProductService.getAllOrderProducts();
 		for(OrderProduct orderProduct : orderProducts) {
 			if(orderProduct.getOrder().getOrderId() == orderId) {
@@ -300,10 +301,15 @@ public class RestaurantController {
 		}
 		Order order = orderService.getOrderById(orderId);
 		EmailRequest emailRequest = new EmailRequest();
-		emailRequest.setTo(order.getRestaurant().getEmail());
+		emailRequest.setTo(order.getCustomer().getEmail());
 		emailRequest.setSubject("ĐƠN HÀNG ĐÃ BỊ HUỶ");
 		emailRequest.setBody("Đơn hàng có mã đơn hàng " + order.getOrderId() + " đã bị huỷ từ nhà hàng.");
 		System.out.println(emailRequest);
+		emailService.sendEmail(emailRequest);
+		if(order.getShipper() != null) {
+			emailRequest.setTo(order.getShipper().getEmail());
+			emailService.sendEmail(emailRequest);
+		}
 		orderService.deleteOrderById(orderId);
 		return "redirect:/restaurant";
 	}

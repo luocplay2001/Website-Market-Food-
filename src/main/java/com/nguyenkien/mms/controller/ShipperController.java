@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 import com.nguyenkien.mms.model.*;
@@ -134,7 +135,7 @@ public class ShipperController {
 	
 	@RequestMapping("orderDid/{orderId}")
 	public String orderDid(Model model,Principal principal,
-			@PathVariable("orderId") Long orderId) {
+			@PathVariable("orderId") Long orderId) throws MessagingException {
 		System.out.println("0000000000000000");
 		List<Shipper> shippers = shipperService.getAllShippers();
 		Shipper shipper = null;
@@ -159,12 +160,15 @@ public class ShipperController {
 		emailRequest.setBody("Đơn hàng có mã " + order.getOrderId() + " đã có tài xế tên "
 				+ order.getShipper().getName() + " nhận đơn.");
 		System.out.println(emailRequest); // gui nha hang va khach hang
+		emailService.sendEmail(emailRequest);
+		emailRequest.setTo(order.getCustomer().getEmail());
+		emailService.sendEmail(emailRequest);
 		return "redirect:/shipper/orderDid";
 	}
 	
 	@RequestMapping("orderNotReceived/{orderId}")
 	public String orderNotReceived(Model model,Principal principal,
-			@PathVariable("orderId") Long orderId) {
+			@PathVariable("orderId") Long orderId) throws MessagingException {
 		List<Shipper> shippers = shipperService.getAllShippers();
 		Shipper shipper = null;
 		if(principal != null) {
@@ -188,6 +192,9 @@ public class ShipperController {
 		emailRequest.setBody("Tài xế " + shipper.getName() + " đã từ chối đơn hàng có mã đơn "
 				+ order.getOrderId() + ".");
 		System.out.println(emailRequest);
+		emailService.sendEmail(emailRequest);
+		emailRequest.setTo(order.getCustomer().getEmail());
+		emailService.sendEmail(emailRequest);
 		return "redirect:/shipper/orderDid";
 	}
 	
@@ -224,7 +231,7 @@ public class ShipperController {
 	
 	@RequestMapping("delivere/{orderId}")
 	public String orderDelivere(Model model,Principal principal,
-			@PathVariable("orderId") Long orderId) {
+			@PathVariable("orderId") Long orderId) throws MessagingException {
 		userShipper(model,principal);
 		Order order = orderService.getOrderById(orderId);
 		order.setStatus_shipper(-1);
@@ -244,6 +251,9 @@ public class ShipperController {
 		emailRequest.setSubject("TÀI XẾ ĐÃ LẤY HÀNG");
 		emailRequest.setBody("Tài xế đã lấy hàng và đang tiến hành giao đến tay khách hàng.");
 		System.out.println(emailRequest);
+		emailService.sendEmail(emailRequest);
+		emailRequest.setTo(order.getCustomer().getEmail());
+		emailService.sendEmail(emailRequest);
 		return "redirect:/shipper/delivere";
 	}
 	
@@ -284,7 +294,7 @@ public class ShipperController {
 	
 	@RequestMapping("orderDelivered/{orderId}")
 	public String orderDelivered(Model model,Principal principal,
-			@PathVariable("orderId") Long orderId) {
+			@PathVariable("orderId") Long orderId) throws MessagingException {
 		userShipper(model,principal);
 		Order order = orderService.getOrderById(orderId);
 		order.setStatus_shipper(1);
@@ -299,6 +309,9 @@ public class ShipperController {
 		emailRequest.setSubject("TÀI XẾ ĐÃ GIAO HÀNG THÀNH CÔNG");
 		emailRequest.setBody("Tài xế đã giao hàng thành công tới khách hàng");
 		System.out.println(emailRequest);
+		emailService.sendEmail(emailRequest);
+		emailRequest.setTo(order.getCustomer().getEmail());
+		emailService.sendEmail(emailRequest);
 		return "redirect:/shipper/orderDelivered";
 	}
 	
