@@ -11,6 +11,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 
+import com.nguyenkien.mms.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -28,14 +29,6 @@ import com.nguyenkien.mms.model.Order;
 import com.nguyenkien.mms.model.OrderProduct;
 import com.nguyenkien.mms.model.Product;
 import com.nguyenkien.mms.model.Restaurant;
-import com.nguyenkien.mms.service.CategoryService;
-import com.nguyenkien.mms.service.CustomerService;
-import com.nguyenkien.mms.service.OrderProductService;
-import com.nguyenkien.mms.service.OrderService;
-import com.nguyenkien.mms.service.ProductService;
-import com.nguyenkien.mms.service.RestaurantService;
-import com.nguyenkien.mms.service.ShipperService;
-import com.nguyenkien.mms.service.ShoppingCartService;
 
 
 @Controller
@@ -71,6 +64,9 @@ public class RestaurantController {
 	
 	@Autowired
 	CategoryService categoryService;
+
+	@Autowired
+	private EmailService emailService;
 	
 	public void userRestaurant(Model model,Principal principal) {
 		List<Restaurant> restaurants = restaurantService.getAllRestaurants();

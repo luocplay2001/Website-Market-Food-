@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.nguyenkien.mms.service.*;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,13 +27,6 @@ import com.nguyenkien.mms.model.OrderProduct;
 import com.nguyenkien.mms.model.Product;
 import com.nguyenkien.mms.model.Restaurant;
 import com.nguyenkien.mms.model.Shipper;
-import com.nguyenkien.mms.service.CustomerService;
-import com.nguyenkien.mms.service.OrderProductService;
-import com.nguyenkien.mms.service.OrderService;
-import com.nguyenkien.mms.service.ProductService;
-import com.nguyenkien.mms.service.RestaurantService;
-import com.nguyenkien.mms.service.ShipperService;
-import com.nguyenkien.mms.service.ShoppingCartService;
 
 @Controller
 @RequestMapping("shipper")
@@ -63,6 +57,9 @@ public class ShipperController {
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private EmailService emailService;
 	
 	public void userShipper(Model model,Principal principal) {
 		List<Shipper> shippers = shipperService.getAllShippers();

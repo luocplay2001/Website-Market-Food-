@@ -9,10 +9,13 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 
+import com.nguyenkien.mms.model.*;
+import com.nguyenkien.mms.service.*;
 import com.nguyenkien.mms.utils.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -27,23 +30,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.nguyenkien.mms.model.Customer;
-import com.nguyenkien.mms.model.CustomerRole;
-import com.nguyenkien.mms.model.Product;
-import com.nguyenkien.mms.model.Restaurant;
-import com.nguyenkien.mms.model.RestaurantRole;
-import com.nguyenkien.mms.model.Role;
-import com.nguyenkien.mms.model.Shipper;
-import com.nguyenkien.mms.model.ShipperRole;
-import com.nguyenkien.mms.service.CustomerRoleService;
-import com.nguyenkien.mms.service.CustomerService;
-import com.nguyenkien.mms.service.DiscountService;
-import com.nguyenkien.mms.service.ProductService;
-import com.nguyenkien.mms.service.RestaurantRoleService;
-import com.nguyenkien.mms.service.RestaurantService;
-import com.nguyenkien.mms.service.RoleService;
-import com.nguyenkien.mms.service.ShipperRoleService;
-import com.nguyenkien.mms.service.ShipperService;
 import com.nguyenkien.mms.utils.WebUtils;
 
 @Controller
@@ -81,9 +67,12 @@ public class HomeController {
 	
 	@Autowired
 	ProductService productService;
+
+	@Autowired
+	private EmailService emailService;
 	
 	@GetMapping("/")
-	public String home(Model model, Principal principal) {
+	public String home(Model model, Principal principal) throws MessagingException {
 		List<Restaurant> restaurants = restaurantService.getAllRestaurants();
 		List<Customer> customers = customerService.getAllCustomers();
 		List<Shipper> shippers = shipperService.getAllShippers();
@@ -114,7 +103,7 @@ public class HomeController {
 			}
 		}
 		model.addAttribute("restaurants",restaurants);
-			
+//		emailService.sendEmail(new EmailRequest("nguyenthao.1601201@gmail.com", "aaaaaaa", "bbbbbbb"));
 		return "home";
 	}
 	

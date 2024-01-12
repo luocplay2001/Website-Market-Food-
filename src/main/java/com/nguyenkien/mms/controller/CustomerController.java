@@ -9,6 +9,7 @@ import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.nguyenkien.mms.service.*;
 import com.nguyenkien.mms.utils.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,13 +27,6 @@ import com.nguyenkien.mms.model.Order;
 import com.nguyenkien.mms.model.OrderProduct;
 import com.nguyenkien.mms.model.Product;
 import com.nguyenkien.mms.model.Restaurant;
-import com.nguyenkien.mms.service.CustomerService;
-import com.nguyenkien.mms.service.OrderProductService;
-import com.nguyenkien.mms.service.OrderService;
-import com.nguyenkien.mms.service.ProductService;
-import com.nguyenkien.mms.service.RestaurantService;
-import com.nguyenkien.mms.service.ShipperService;
-import com.nguyenkien.mms.service.ShoppingCartService;
 
 
 @Controller
@@ -64,6 +58,9 @@ public class CustomerController {
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private EmailService emailService;
 	
 	public void userCustomer(Model model,Principal principal) {
 		List<Customer> customers = customerService.getAllCustomers();
